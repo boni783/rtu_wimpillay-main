@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "228454848747",
+    "project_id": "rtu-wimpillay",
+    "storage_bucket": "rtu-wimpillay.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:228454848747:android:ab4ed802c14745c9ca06ae",
+        "android_client_info": {
+          "package_name": "com.example.rtu_wimpillay"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmDgWe70WCA5hqjKH4BjNmhrmhzCbG5FM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
