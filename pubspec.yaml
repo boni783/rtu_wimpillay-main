@@ -9,14 +9,22 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
+  # Íconos y utilidades básicas
   cupertino_icons: ^1.0.8
-  firebase_core: ^4.2.0
-  firebase_auth: ^6.1.1        # ✅ NUEVO: Para autenticación
-  google_sign_in: ^7.2.0      # ✅ NUEVO: Para login con Google
-  cloud_firestore: ^6.0.3     # ✅ ACTUALIZADO: Versión compatible
-  qr_flutter: ^4.1.0
-  mobile_scanner: ^3.5.0
   provider: ^6.1.1
+
+  # 🔥 Firebase (versiones compatibles)
+  firebase_core: ^4.2.0
+  firebase_auth: ^6.1.1
+  cloud_firestore: ^6.0.3
+
+  # 🔑 Login con Google
+  google_sign_in: ^6.2.1
+
+  # 📱 Escáner QR y cámara
+  qr_flutter: ^4.1.0
+  mobile_scanner: ^7.1.2
 
 dev_dependencies:
   flutter_test:

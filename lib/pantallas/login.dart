@@ -1,48 +1,110 @@
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:rtu_wimpillay/services/auth_service.dart';
 
-class AuthService {
-  // Instancia de GoogleSignIn - CORREGIDO
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
-  // Método para iniciar sesión con Google - CORREGIDO
-  Future<User?> signInWithGoogle() async {
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final AuthService _authService = AuthService();
+  bool _isLoading = false;
+
+  Future<void> _signInWithGoogle() async {
+    setState(() {
+      _isLoading = true;
+    });
+
     try {
-      // Iniciar el flujo de Google Sign-In
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      final user = await _authService.signInWithGoogle();
 
-      if (googleUser == null) {
-        return null; // Usuario canceló el login
+      if (user != null) {
+        // ✅ Login exitoso - navegar a home
+        print('Usuario logeado: ${user.displayName}');
+        // Aquí puedes navegar a tu pantalla principal
+        // Navigator.pushReplacementNamed(context, '/home');
+      } else {
+        // Usuario canceló el login
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Inicio de sesión cancelado'),
+            backgroundColor: Colors.orange,
+          ),
+        );
       }
-
-      // Obtener los detalles de autenticación - CORREGIDO
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
-
-      // Crear credencial de Firebase - CORREGIDO
-      final OAuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.,
-        idToken: googleAuth.idToken,
-      );
-
-      // Iniciar sesión en Firebase con la credencial de Google
-      final UserCredential userCredential =
-          await _auth.signInWithCredential(credential);
-
-      return userCredential.user;
     } catch (error) {
-      print("Error en Google Sign-In: $error");
-      return null;
+      // Error en el login
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error al iniciar sesión: $error'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
-  // Método para cerrar sesión
-  Future<void> signOut() async {
-    await _googleSignIn.signOut();
-    await _auth.signOut();
-  }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Logo o imagen de tu app
+            FlutterLogo(size: 100),
+            SizedBox(height: 50),
 
-  // Verificar si hay un usuario logeado
-  User? get currentUser => _auth.currentUser;
+            // Título
+            Text(
+              'RTU Wimpillay',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 10),
+            Text(
+              'Inicia sesión para continuar',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey,
+              ),
+            ),
+            SizedBox(height: 40),
+
+            // Botón de Google Sign-In
+            if (_isLoading)
+              CircularProgressIndicator()
+            else
+              ElevatedButton(
+                onPressed: _signInWithGoogle,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: Colors.black,
+                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Image.asset(
+                      'assets/images/google_logo.png', // Añade este asset
+                      height: 24,
+                      width: 24,
+                    ),
+                    SizedBox(width: 10),
+                    Text('Iniciar sesión con Google'),
+                  ],
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
 }
